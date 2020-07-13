@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+
+input, div {
+	margin: 0;
+	padding: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+        
+    .navbar {
+        display: inline;
+        
+    }
+    #searchbar {
+        position: relative;
+        display: inline;
+        margin-right: 20px;
+    }
+    #search {
+        height: 100%;
+        width: 288px;
+        border: 1px solid lightgray;
+    }
+    .selectbox {
+        height: 35px;
+        width: 273px;
+        border: 1px solid lightgray;
+    }
+    .main {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        padding-bottom: 20px;
+    }
+    .contentBox {
+    display: inline-flex;
+    flex-wrap: wrap;
+    height: 240px;
+    width: 240px;
+    border: 1px solid lightblue;
+    position: relative;
+    overflow: hidden;
+    vertical-align: top;
+    }
+    .contentBox:hover #info{
+        bottom:100%; 
+        margin-bottom:-40px; 
+        background:#adf;
+        }
+    
+
+    .contentBox:hover .cart{
+        top:0;
+        }
+
+        .contentBox.off{filter: grayscale(100%); opacity:0.2;}
+
+    #contentMain {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 50px ;
+        width: 1200px;
+        justify-content: center;
+    }
+
+    #searchbtn {
+        display: inline-block;
+    background-color: yellow;
+    height: 106%;
+    border: 1px solid gray;
+    padding-left: 10px;
+    position: absolute;
+    bottom: -7%;
+    right: 0;
+    width: 19%;
+    cursor: pointer;
+    
+    }
+
+    #wrapper {
+        display: flex;
+        justify-content: center;
+        max-width: 1200px;
+        margin: auto;
+        
+    }
+    #info {
+    position: absolute;
+    bottom: 0;
+    font-size: 16px;
+    line-height: 1.5em;
+    padding: 5px 0px 5px 10px;
+    display: inline-block;
+    width: 100%;
+    margin: auto;
+    background-color:rgb(245, 241, 8);
+    transition: bottom 0.5s, margin-bottom 0.5s, background 0.5s;
+    z-index: 2;
+    }
+    #info2 {
+    position: absolute;
+    right: 16px;
+    display: inline-block;
+    }
+    .cart {
+    position: absolute;
+    top: 100%;
+    transition: top 0.5s;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: #fefefe;
+    text-align: center;
+    }
+    .Box {
+    height: 40px;
+    line-height: 40px;
+    width: 80%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    }
+    .addtocart {
+    display: inline-block;
+    width: 90px;
+    height: 40px;
+    background: #fe2;
+    text-align: center;
+    cursor: pointer;
+    }
+    @media screen and (max-width:960px){
+    .contentBox:hover #info{bottom:0; margin-bottom:0; background:#fe2;}
+    .contentBox:hover .cart{top:auto;}
+    .contentBox #info .price{right:35px; top:1px;}
+    .contentBox #info:before{content:"\2946"; position:absolute; right:4px; top:0; font-size:25px; width:30px; height:40px; line-height:36px; text-align:right;}
+    .contentBox .cart{height:40px; z-index:3; transition:left 0.3s; border-top:1px solid #ccc;}
+    .contentBox .cart.on{left:0; top:auto;}
+    .contentBox .cart:before{content:"\2945"; position:absolute; right:4px; top:0; font-size:25px; width:30px; height:40px; line-height:36px; text-align:right;}
+}
+
+    @media screen and (max-width:640px){
+        .main{padding:15px 0;}
+        .main{display: block;}
+        .main .drops{height:auto; }
+        #searchbar{margin:4px auto; width:80%; display:block;}
+        .selectbox{margin:10px auto 0 auto; width:80%; display:block; border:0;}
+        .navbar{display:block;}
+        #searchbar{display: block;}
+        .selectbox{display:block; border: 1px solid black;}
+        #search{width: 100%; height: 35px;}
+        #searchbtn{height: 100%; bottom: 0px;}
+        #contentMain{display: grid;}
+    }
+    </style>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</head>
+<body>
+    <div class='main'>
+        <div id='searchbar'>
+        <form class="navbar">
+                <input type='text' placeholder="Type to Search" id="search" />
+                <button i class='fa fa-search' id="searchbtn" onclick="Search(event)"></button>
+                </form>
+            </div>
+        <select class="selectbox" onchange="Select(this)">
+            <option class='options'>Sort by:</option>
+            <option class='options' value='color'>Color</option>
+            <option class='options' value='name'>Name</option>
+            <option class='options' value='price'>Price</option>
+        </select>
+</div>
+<hr>
+    <div id='wrapper'>
+    <div id="contentMain" >
+    </div>
+   </div>
+
+    <script>
+    
+       
+       // All items 
+
+       var listAllProperties = [
+         {id:0, name:'Ursidae', color:'Blue', tags:'big,wild', price:99.99, image: "https://s-media-cache-ak0.pinimg.com/originals/40/62/b2/4062b289637ea5c537c7133fae2ce44c.jpg"},
+         {id:1, name:'Canis Lupus', color:'Blue', tags:'medium,tame', price:50,image: "https://s-media-cache-ak0.pinimg.com/736x/33/46/c3/3346c3b90b5c6b568afb1a871f354884.jpg"}, 
+         {id:2, name:'Felis catus', color:'Red', tags:'small,tame', price:87.65, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRyfkZ1Saa5cIeco23KvxoueVsGr9GP7H2N7XpU3GseL0545fv"},
+         {id:3, name:'Loxodonta', color:'Red', tags:'big,wild', price:9000, image: "http://i.ebayimg.com/00/s/MzAwWDMwMA==/z/g5IAAOSwRLZUBOT1/$_35.JPG?set_id=2"},
+         {id:4, name:'Panthera Tigris', color:'Yellow', tags:'big,wild', price:750.4567, image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSOtXtWAqOkuH2iiiH2st5LUBQDZoXph8WuZTwYYDSoW17MAdHW6qOnbcLNVzJ7m0uX79DAIEY&usqp=CAE"},
+         {id:5, name:'Cetacea', color:'Yellow', tags:'big,wild', price:10000, image: "https://cdn3.volusion.com/9nxdj.fchy5/v/vspfiles/photos/AR-16642-2.jpg?1372150256"},  
+         {id:6, name:'Aquila', color:'Yellow', tags:'small,wild,tame', price:550.5, image: "https://cdn3.volusion.com/9nxdj.fchy5/v/vspfiles/photos/FA-A03819-2.jpg?1385734031"},
+         {id:7, name:'Lacertilia', color:'Green', tags:'small,wild,tame', price:13.75, image: "https://cdn3.volusion.com/9nxdj.fchy5/v/vspfiles/photos/WR-12905-2.jpg?1366898835"} 
+         ];
+
+         // Functions for Properties 
+        function myArrayFunction() {
+        listAllProperties.sort((a,b) => (a.price-b.price));
+        displayArrays();
+        }    
+        
+        function myNameArray() {
+        listAllProperties.sort((a,b) => (a.name > b.name ? 1 : 
+        -1)); 
+        displayArrays();
+        }
+
+        function myColorArray() {
+        listAllProperties.sort((a,b) => (a.color > b.color ? 1 : 
+        -1));
+        displayArrays();    
+        }
+
+        // Function for conditional logic
+
+        function Select (obj) {
+               if (obj.value == 'color') {
+                   myColorArray()
+               }
+               else if (obj.value == 'price') {
+                   myArrayFunction()
+               }
+               else if (obj.value == 'name') {
+                   myNameArray()
+               }
+    
+        }
+
+ 
+
+        // Function for displaying array 
+
+         
+function displayArrays() {
+document.getElementById("contentMain").innerHTML =
+listAllProperties.map(function (item) {
+    return '<div class="contentBox"  style=" background-image:url('+item.image+'); background-position: center; background-size: cover; background-repeat: no-repeat; margin: 5px;">'  + 
+    "<div id='info'>"  + item.name + "<div id='info2'>" + "$" + item.price + "</div>" + "</div>" +
+    '<div class="cart">' + "<div class='Box'>" + 'QTY' + "<form>" + "<input type='text' class='things' value='1'>" + "<div class='addtocart' onclick='cart(this.id)' id='"+ item.id+"'>" + "Add To Cart" + '</div>' + "</form>" + '</div>' + '</div>' + "</div>";
+}).join('');
+
+}
+
+
+        // Search Bar
+
+function Search () {
+         // loop through list items and hide items that dont match search
+       event.preventDefault()
+let search = document.getElementById('search').value;
+let filteredData = listAllProperties.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
+if (search === '') {
+    return alert('Type in something')
+}
+
+document.getElementById("contentMain").innerHTML = '<div class="contentBox" style="background-image:url('+filteredData[0].image+'); background-position: center; background-size: cover; background-repeat: no-repeat; margin: 5px;">'  + 
+    "<div id='info'>"  + filteredData[0].name + "<div id='info2'>" + "$" + filteredData[0].price + "</div>" + "</div>" +
+    '<div class="cart">' + "<div class='Box'>" + 'QTY' + "<form>" + "<input type='text' class='things' value='1'>" + "<div class='addtocart' onclick='cart2(this.id)' id='" +filteredData[0].id+ "'>" + "Add To Cart" + '</div>' + "</form>" + '</div>' + '</div>' + '</div>'}
+
+
+   
+     // function to get item name and price 
+     // function for conditional logic to prevent more than 15 items and have at least one
+    
+function cart (clicked_id) {
+    var qty = document.getElementsByClassName('things')
+    var x = qty[clicked_id].value
+    console.log(qty[clicked_id].value)
+    if (clicked_id == listAllProperties[clicked_id].id && x < 16 && x > 0) {
+    return alert('You added ' + x + " of " + listAllProperties[clicked_id].name + " to your cart")
+    }
+    else if (x == 0) {
+    return alert('Please enter at least one item')
+    }
+    else return alert('Please enter a maximum of 15!')
+    }
+
+     // function for filtered search results 
+    
+    function cart2 (clicked_id) {
+    var qty = document.getElementsByClassName('things')
+    var x = qty[0].value
+    if (clicked_id == listAllProperties[clicked_id].id && x < 16 && x > 0) {
+    return alert('You added ' + x + " of " + listAllProperties[clicked_id].name + " to your cart")
+    }
+    else if (x == 0) {
+    return alert('Please enter at least one item')
+    }
+    else return alert('Please enter a maximum of 15!')
+    }
+         // Final Display 
+
+displayArrays()
+
+</script>
+</body>
+</html>
